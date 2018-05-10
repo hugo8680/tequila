@@ -1,14 +1,23 @@
-class QuestionListHandler:
+# -*- coding: utf-8 -*-
+
+from handlers.base_handlers import BaseHandler
+
+
+class QuestionListHandler(BaseHandler):
     pass
 
-class QuestionCreateHandler:
+
+class QuestionCreateHandler(BaseHandler):
     pass
 
-class QuestionDeleteHandler:
+
+class QuestionDeleteHandler(BaseHandler):
     pass
 
-class QuestionUpdateHandler:
+
+class QuestionUpdateHandler(BaseHandler):
     pass
 
-class QuestionDetailHandler:
+
+class QuestionDetailHandler(BaseHandler):
     pass

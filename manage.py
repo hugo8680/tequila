@@ -6,21 +6,19 @@ import socket
 
 from tornado import web, gen, ioloop, httpserver, process, netutil
 
-from tornado.web import Application
-
 from router import ROUTERS
 from conf import SETTINGS, DATABASE
 
 
-class App(Application):
+class Application(web.Application):
     def __init__(self):
-        super(App, self).__init__(handlers=ROUTERS, **SETTINGS)
+        super(Application, self).__init__(ROUTERS, **SETTINGS)
 
 
 if __name__ == '__main__':
     args = sys.argv[1:]
     if args[0] == 'run':
-        app = App()
+        app = Application()
         print('Starting server on port 8000...')
         sockets = netutil.bind_sockets(8000, '127.0.0.1', socket.AF_UNSPEC)
         process.fork_processes(5)
