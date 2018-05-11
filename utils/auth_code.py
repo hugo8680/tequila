@@ -104,7 +104,7 @@ def get_pic_code():
     __cg.create_pic()
     __cg.create_point(500, (220, 220, 220))
     __cg.create_line(30, (220, 220, 220))
-    __check = __cg.create_text("static/font-awesome/simsun.ttf", 24, (0, 0, 205), 4, (7, 7))
+    __check = __cg.create_text("static/font/simsun.ttf", 24, (0, 0, 205), 4, (7, 7))
     __cg.opera()
 
     return __cg.img, __check

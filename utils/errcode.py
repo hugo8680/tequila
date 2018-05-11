@@ -4,3 +4,6 @@ USERNAME_ERR = (100002, '用户名错误')
 PASSWORD_ERR = (100003, '密码错误')
 USER_EXISTS = (100004, '用户名已存在')
 USER_CREATE_ERR = (100005, '用户创建失败')
+
+# QUESTION
+PARAMETER_ERR = (200001, '参数错误')

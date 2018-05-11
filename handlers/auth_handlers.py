@@ -30,17 +30,16 @@ class LoginHandler(BaseHandler):
         vcode = self.get_argument('vcode', '')
         username = self.get_argument('username', '')
         password = self.get_argument('password', '')
-        print(username)
 
         if self.get_secure_cookie(sign).decode('utf-8') != vcode:
             self.json_response(*LOGIN_VCODE_ERR)
             return
 
         data = get_user_by_username(username)
-        print(data)
         if not data:
             self.json_response(*USERNAME_ERR)
             return
+
         if data.get('password') != hashlib.sha1(password.encode('utf-8')).hexdigest():
             self.json_response(*PASSWORD_ERR)
             return
@@ -78,7 +77,6 @@ class SignupHandler(BaseHandler):
             return
 
         password = hashlib.sha1(password.encode('utf-8')).hexdigest()
-
         result = create_user(username, password)
         if not result:
             self.json_response(*USER_CREATE_ERR)
