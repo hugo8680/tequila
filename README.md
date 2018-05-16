@@ -1,5 +1,6 @@
 # tequila
 Tequila is a website contributed to give answers to rookies
+* Using Python3
 * Bulding with Tornado 5
 * Using MySQL 5.7
 * Using Asynchronous IO programming
