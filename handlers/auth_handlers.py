@@ -3,6 +3,7 @@
 import base64
 import uuid
 import hashlib
+from urllib import parse
 from io import BytesIO
 
 from tornado import web
@@ -18,13 +19,11 @@ from utils.errcode import LOGIN_VCODE_ERR, PASSWORD_ERR, USERNAME_ERR, USER_EXIS
 
 
 class LoginHandler(BaseHandler):
-    executor = ThreadPoolExecutor(4)
-
     @gen.coroutine
     def get(self, *args, **kwargs):
         self.render('login.html')
 
-    @run_on_executor
+    @gen.coroutine
     def post(self, *args, **kwargs):
         sign = self.get_argument('sign', '')
         vcode = self.get_argument('vcode', '')
@@ -33,34 +32,36 @@ class LoginHandler(BaseHandler):
 
         if self.get_secure_cookie(sign).decode('utf-8') != vcode:
             self.json_response(*LOGIN_VCODE_ERR)
-            return
+            raise gen.Return()
 
-        data = get_user_by_username(username)
+        data = yield get_user_by_username(username)
         if not data:
             self.json_response(*USERNAME_ERR)
-            return
+            raise gen.Return()
 
         if data.get('password') != hashlib.sha1(password.encode('utf-8')).hexdigest():
             self.json_response(*PASSWORD_ERR)
-            return
+            raise gen.Return()
 
         self.set_secure_cookie('auth-user', data.get('username', ''))
         self.json_response(200, 'OK', {})
 
+
 class LogoutHandler(BaseHandler):
     @gen.coroutine
     def get(self, *args, **kwargs):
+        next = self.get_argument('next', '')
         self.clear_cookie('auth-user')
-        self.redirect('/?m=注销成功&e=success')
+        next = next + '?' + parse.urlencode({'m': '注销成功', 'e': 'success'})
+        self.redirect(next)
+
 
 class SignupHandler(BaseHandler):
-    executor = ThreadPoolExecutor(4)
-
     @gen.coroutine
     def get(self, *args, **kwargs):
         self.render('login.html')
 
-    @run_on_executor
+    @gen.coroutine
     def post(self, *args, **kwargs):
         username = self.get_argument('username', '')
         password = self.get_argument('password', '')
@@ -69,18 +70,18 @@ class SignupHandler(BaseHandler):
 
         if self.get_secure_cookie(sign).decode('utf-8') != vcode:
             self.json_response(*LOGIN_VCODE_ERR)
-            return
+            raise gen.Return()
 
-        data = get_user_by_username(username)
+        data = yield get_user_by_username(username)
         if data:
             self.json_response(*USER_EXISTS)
-            return
+            raise gen.Return()
 
         password = hashlib.sha1(password.encode('utf-8')).hexdigest()
-        result = create_user(username, password)
+        result = yield create_user(username, password)
         if not result:
             self.json_response(*USER_CREATE_ERR)
-            return
+            raise gen.Return()
 
         self.set_secure_cookie('auth-user', username)
         self.json_response(200, 'OK', {})

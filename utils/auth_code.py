@@ -107,4 +107,4 @@ def get_pic_code():
     __check = __cg.create_text("static/font/simsun.ttf", 24, (0, 0, 205), 4, (7, 7))
     __cg.opera()
 
-    return __cg.img, __check
+    raise gen.Return((__cg.img, __check))

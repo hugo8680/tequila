@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}{{ question['abstract'] }}{% end %}
+{% block body %}
+<div id="question-detail" class="container">
+    {% autoescape None %}
+    <h2>{{ question['abstract'] }}</h2>
+    <p>by<b> {{ question['username'] }}</b> 创建时间: {{ question['created_at'] }}</p>
+    <div class="content-detail">
+        {{ question['content'] }}
+    </div>
+    <div id="answer-list">
+        <div class="list-group">
+        </div>
+    </div>
+    <form id="answer-editor">
+        <div class="form-group">
+            <label for="answer-textarea">我的答案</label>
+            <textarea class="form-control" id="answer-textarea"></textarea>
+        </div>
+        <div class="form-group">
+            <button type="submit" id="submit-answer" class="btn btn-primary">提交答案</button>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="{{ static_url('js/module.js') }}"></script>
+<script type="text/javascript" src="{{ static_url('js/hotkeys.js') }}"></script>
+<script type="text/javascript" src="{{ static_url('js/uploader.js') }}"></script>
+<script type="text/javascript" src="{{ static_url('js/simditor.js') }}"></script>
+<script type="text/javascript" src="{{ static_url('js/question-detail.js') }}"></script>
+{% end %}

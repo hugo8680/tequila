@@ -2,24 +2,35 @@
 
 from tornado import gen
 
-from database.connect import Connect
+from database.connect import async_connect
 
 
+@gen.coroutine
 def get_user_by_username(username):
-    conn = Connect()
+    conn = yield async_connect()
+    cur = conn.cursor()
     sql = "SELECT username, email, password FROM t_user WHERE username='%s';" % username
-    conn.dict_cusor.execute(sql)
-    data = conn.dict_cusor.fetchone() or {}
-    conn.cursor.close()
-    conn.connection.close()
-    return data
+    try:
+        yield cur.execute(sql)
+        data = cur.fetchone()
+    except Exception as e:
+        data = {}
+    finally:
+        cur.close()
+        conn.close()
+    raise gen.Return(data)
 
 
+@gen.coroutine
 def create_user(username, password):
-    conn = Connect()
+    conn = yield async_connect()
+    cur = conn.cursor()
     sql = "INSERT INTO t_user(username, password) VALUES ('%s', '%s');" % (username, password)
-    data = conn.dict_cusor.execute(sql)
-    conn.connection.commit()
-    conn.cursor.close()
-    conn.connection.close()
-    return data
+    try:
+        data = yield cur.execute(sql)
+    except Exception as e:
+        data = 0
+    finally:
+        cur.close()
+        conn.close()
+    raise gen.Return(data)

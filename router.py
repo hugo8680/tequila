@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 
+from tornado.web import StaticFileHandler
+
 from handlers.index_handlers import IndexHandler
 from handlers.auth_handlers import LoginHandler, LogoutHandler, SignupHandler, AuthCodeHandler
-from handlers.question_handlers import QuestionListHandler, QuestionCreateHandler, QuestionDeleteHandler, QuestionUpdateHandler, QuestionDetailHandler
+from handlers.question_handlers import QuestionListHandler, QuestionCreateHandler, QuestionDeleteHandler, QuestionUpdateHandler, QuestionDetailHandler, QuestionUploadPicHandler
 from handlers.answer_handlers import AnswerListHandler, AnswerCreateHandler, AnswerDetailHandler, AnswerUpdateHandler, AnswerDeleteHandler
+
+from conf import DEFAULT_UPLOAD_PATH
 
 
 # INDEX
@@ -34,12 +38,13 @@ ROUTERS += [
     (r'/question/update/(\d+)', QuestionUpdateHandler),
     (r'/question/detail/(\d+)', QuestionDetailHandler),
     (r'/question/delelte/(\d+)', QuestionDeleteHandler),
+    (r'/question/picload', QuestionUploadPicHandler),
 ]
 
 
 # ANSWER
 ROUTERS += [
-    (r'/answer/list', AnswerListHandler),
+    (r'/answer/list/(\d+)', AnswerListHandler),
     (r'/answer/create', AnswerCreateHandler),
     (r'/answer/update/(\d+)', AnswerUpdateHandler),
     (r'/answer/detail/(\d+)', AnswerDetailHandler),
@@ -50,4 +55,10 @@ ROUTERS += [
 # TAG
 ROUTERS += [
 
+]
+
+
+# STATICFILES
+ROUTERS += [
+    (r'/pics/(.*?)$', StaticFileHandler, {'path': DEFAULT_UPLOAD_PATH})
 ]

@@ -1,5 +1,9 @@
 let loginSign;
 
+$(document).ready(function () {
+   refreshLoginVcode();
+});
+
 $('#loginVcode').click(function () {
     refreshLoginVcode();
 });
@@ -44,7 +48,7 @@ $('#submitSignup').click(function () {
         dataType: 'json',
         success: function (res) {
             if(res.status === 200 && res.data) {
-                window.location.href = '/?m=注册成功！&e=success';
+                window.location.href = getQueryString('next') || '/' + encodeURI('?m=登录成功&e=success');
             }else if(res.status === 100001) {
                 $('#form-vcode').css('border', 'solid red');
                 $('#form-vcode').val('');
@@ -54,7 +58,10 @@ $('#submitSignup').click(function () {
                 $('#form-username').val('')
                 $('#form-username').attr('placeholder', res.message);
             }else if(res.status === 100005) {
-                $('.registration-form').prepend("<div class='alert alert-danger'>创建失败</div>");
+                $('.registration-form').prepend("<div id='regMessage' class='alert alert-danger'>注册失败</div>");
+                setTimeout(function () {
+                    $('.registration-form').find('#regMessage').remove();
+                    }, 1500);
             }
         }
     })
@@ -95,12 +102,12 @@ $('#submitLogin').click(function () {
             username: username,
             password: password,
             vcode: vcode,
-            sign: loginSign
+            sign: loginSign,
         },
         dataType: 'json',
         success: function (res) {
             if(res.status === 200 && res.data) {
-                window.location.href = '/?m=登录成功！&e=success';
+                window.location.href = getQueryString('next') || '/' + encodeURI('?m=登录成功&e=success');
             }else if(res.status === 100001) {
                 $('#form-vcode').css('border', 'solid red');
                 $('#form-vcode').val('');

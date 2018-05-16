@@ -2,8 +2,11 @@
 
 import pymysql
 
-from conf import DATABASE
+from tornado import gen
 
+from conf import DATABASE
+from database import tornado_mysql
+from database.tornado_mysql import pools
 
 pymysql.install_as_MySQLdb()
 
@@ -21,8 +24,25 @@ class Connect(object):
         self.cursor.close()
 
 
-
 def connect():
     config = DATABASE.get('default', {})
     conn = pymysql.connections.Connection(**config)
     return conn.cursor(cursor=pymysql.cursors.DictCursor)
+
+
+def async_connect():
+    conf = DATABASE.get('default', {})
+    conf.update({
+        'autocommit': True,
+        'cursorclass': tornado_mysql.cursors.DictCursor
+    })
+    return tornado_mysql.connect(**conf)
+
+
+def async_pool():
+    conf = DATABASE.get('default', {})
+    conf.update({
+        'cursorclass': tornado_mysql.cursors.DictCursor
+    })
+    POOL = pools.Pool(conf, max_idle_connections=1, max_recycle_sec=3)
+    return POOL
