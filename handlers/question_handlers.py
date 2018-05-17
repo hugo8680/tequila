@@ -9,7 +9,7 @@ from tornado import gen
 from tornado import web
 
 from handlers.base_handlers import BaseHandler
-from database.question import get_paged_questions, get_all_tags, create_question, get_question_by_qid
+from database.sql_utils.question import get_paged_questions, get_all_tags, create_question, get_question_by_qid
 
 from utils.errcode import PARAMETER_ERR, CREATE_ERR
 from conf import DEFAULT_UPLOAD_PATH, DOMAIN
@@ -36,7 +36,7 @@ class QuestionListHandler(BaseHandler):
 
         self.json_response(200, 'OK', {
             'question_list': data,
-            'last_qid': lqid
+            'last_qid': lqid,
         })
 
 

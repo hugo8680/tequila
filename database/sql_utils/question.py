@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import pymysql
-
 from tornado import gen
 
 from database.tornado_mysql import escape_string
-from database.connect import async_connect, async_pool
+from database.sql_utils.connect import async_connect
 
 
 @gen.coroutine

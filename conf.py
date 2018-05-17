@@ -27,3 +27,13 @@ DATABASE = {
         'charset': 'utf8'
     }
 }
+
+
+REDIS = {
+    'default': {
+        'host': 'localhost',
+        'port': 6379,
+        'password': '',
+        'selected_db': 0,
+    }
+}

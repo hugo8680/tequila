@@ -2,8 +2,6 @@
 
 import pymysql
 
-from tornado import gen
-
 from conf import DATABASE
 from database import tornado_mysql
 from database.tornado_mysql import pools

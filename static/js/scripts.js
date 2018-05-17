@@ -6,6 +6,7 @@ $(document).ready(function() {
             $('#baseMessage').remove();
             }, 1000);
     }
+    requestAnswerStatus();
 });
 $('#signBtn').click(function () {
    if($(this).html() !== '登录') {
@@ -20,6 +21,10 @@ $('#signBtn').click(function () {
    }
 });
 
+$('#signBtn #status').click(function () {
+    return false;
+});
+
 function getCurrentUrl() {
     return window.location.pathname;
 }
@@ -28,4 +33,12 @@ function getQueryString(name) {
     let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
     let r = window.location.search.substr(1).match(reg);
     if (r != null) return unescape(r[2]); return null;
+}
+
+function requestAnswerStatus() {
+    jQuery.getJSON('/answer/status',
+        function (res) {
+        $('#signBtn #status').html(res.answer_count);
+        requestAnswerStatus()
+    })
 }

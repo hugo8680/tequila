@@ -6,13 +6,10 @@ import hashlib
 from urllib import parse
 from io import BytesIO
 
-from tornado import web
 from tornado import gen
-from tornado.concurrent import run_on_executor
-from concurrent.futures import ThreadPoolExecutor
 
 from handlers.base_handlers import BaseHandler
-from database.auth import get_user_by_username, create_user
+from database.sql_utils.auth import get_user_by_username, create_user
 
 from utils.auth_code import get_pic_code
 from utils.errcode import LOGIN_VCODE_ERR, PASSWORD_ERR, USERNAME_ERR, USER_EXISTS, USER_CREATE_ERR

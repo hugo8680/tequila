@@ -2,7 +2,7 @@
 
 from tornado import gen
 
-from database.connect import async_connect
+from database.sql_utils.connect import async_connect
 
 
 @gen.coroutine

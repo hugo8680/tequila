@@ -100,9 +100,7 @@ form.registration-form fieldset {
 #answer-list {
 	text-align: left;
 	margin-top: 60px;
-	border-top-style: double;
-	border-top-color: black;
-	border-top-width: 1px;
+	border-top: 2px double black;
 }
 #answer-list .list-group {
 	margin-top: 16px;
@@ -110,9 +108,7 @@ form.registration-form fieldset {
 #answer-editor{
 	text-align: left;
 	margin-top: 60px;
-	border-top-style: double;
-	border-top-color: black;
-	border-top-width: 1px;
+	border-top: 2px double black;
 }
 #answer-editor .form-group {
 	margin-top: 16px;
