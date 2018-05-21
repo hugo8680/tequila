@@ -25,7 +25,7 @@ def get_answers(qid):
 def get_answer_status(user):
     conn = yield async_connect()
     cur = conn.cursor()
-    sql = "SELECT COUNT(a.aid) AS answer_count FROM t_answer a LEFT JOIN t_question q ON a.qid = q.qid LEFT JOIN t_user u ON u.username='%s' AND q.uid=u.uid WHERE a.has_read != 1;" % user
+    sql = "SELECT SUM(c) AS answer_count FROM (SELECT qid, COUNT(qid) AS c FROM t_answer WHERE has_read=0 GROUP BY qid) AS a WHERE a.qid IN (SELECT qid FROM t_question WHERE uid=(SELECT uid FROM t_user WHERE username='%s'));" % user
     try:
         yield cur.execute(sql)
         data = cur.fetchone()
@@ -46,6 +46,41 @@ def create_answer(qid, user, content):
     try:
         data = yield cur.execute(sql1)
         yield cur.execute(sql2)
+    except Exception as e:
+        data = 0
+    finally:
+        cur.close()
+        conn.close()
+    raise gen.Return(data)
+
+
+@gen.coroutine
+def get_unread_answer(user):
+    conn = yield async_connect()
+    cur = conn.cursor()
+    # sql = "SELECT q.qid, q.abstract, u.username FROM t_answer a LEFT JOIN t_question q ON a.qid = q.qid LEFT JOIN t_user u ON u.uid = a.uid WHERE q.uid = (SELECT uid FROM t_user WHERE username='%s');" % user
+    sql = "SELECT a.qid, a.answer_count, c.abstract FROM "
+    sql += "(SELECT qid, COUNT(qid) AS answer_count FROM t_answer WHERE has_read=0 GROUP BY qid) AS a"
+    sql += " LEFT JOIN t_question AS c ON c.qid = a.qid WHERE a.qid IN (SELECT b.qid FROM t_question AS b"
+    sql += " WHERE uid=(SELECT uid FROM t_user WHERE username='%s'));" % user
+    try:
+        yield cur.execute(sql)
+        data = cur.fetchall()
+    except Exception as e:
+        data = []
+    finally:
+        cur.close()
+        conn.close()
+    raise gen.Return(data)
+
+
+@gen.coroutine
+def check_answers(qid):
+    conn = yield async_connect()
+    cur = conn.cursor()
+    sql = "UPDATE t_answer SET has_read=1 WHERE qid=%d" % qid
+    try:
+        data = yield cur.execute(sql)
     except Exception as e:
         data = 0
     finally:

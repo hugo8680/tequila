@@ -6,11 +6,12 @@ from tornado import gen
 from tornado import web
 
 from handlers.base_handlers import BaseHandler
-from database.sql_utils.answer import get_answers, create_answer, get_answer_status
+from database.sql_utils.answer import get_answers, create_answer, get_answer_status, get_unread_answer, check_answers
 from database.nosql_utils.connect import redis_connect
 from database.nosql_utils.channels import ANSWER_STATUS_CHANNEL
 
 from utils.errcode import PARAMETER_ERR, CREATE_ERR, USER_HAS_NOT_VALIDATE
+from utils.jsonEncoder import JsonEncoder
 
 
 class AnswerListHandler(BaseHandler):
@@ -22,6 +23,7 @@ class AnswerListHandler(BaseHandler):
             self.json_response(*PARAMETER_ERR)
             raise gen.Return()
         data = yield get_answers(qid)
+        yield check_answers(qid)
         self.json_response(200, 'OK', {
             'answer_list': data,
         })
@@ -53,7 +55,7 @@ class AnswerCreateHandler(BaseHandler):
         if not data:
             self.json_response(*CREATE_ERR)
             raise gen.Return()
-        yield gen.Task(self.redis.publish, ANSWER_STATUS_CHANNEL, json.dumps(answer_status))
+        yield gen.Task(self.redis.publish, ANSWER_STATUS_CHANNEL, json.dumps(answer_status, cls=JsonEncoder))
         self.json_response(200, 'OK', {})
 
 
@@ -109,3 +111,18 @@ class AnswerStatusHandler(BaseHandler):
 
     def on_connection_close(self):
         self.finish()
+
+
+class AnswerStatusCurrentHandler(BaseHandler):
+    @gen.coroutine
+    def get(self, *args, **kwargs):
+        data = yield get_answer_status(self.current_user)
+        self.json_response(200, 'OK', data)
+
+
+class UnreadAnswerHandler(BaseHandler):
+    @gen.coroutine
+    def get(self, *args, **kwargs):
+        user = self.current_user
+        uquestions = yield get_unread_answer(user)
+        self.render('unread_answer.html', data={'unread_questions': uquestions})

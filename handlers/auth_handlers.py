@@ -41,6 +41,7 @@ class LoginHandler(BaseHandler):
             raise gen.Return()
 
         self.set_secure_cookie('auth-user', data.get('username', ''))
+        self.set_cookie('username', data.get('username', ''))
         self.json_response(200, 'OK', {})
 
 

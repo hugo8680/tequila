@@ -11,6 +11,27 @@ $('#preQuestions').click(function () {
     loadQuestion(1, lastQid);
 });
 
+$('#search-btn').click(function () {
+    searchQuestion('#search');
+});
+
+$('#result-search-btn').click(function () {
+    searchQuestion('#result-search');
+});
+
+function searchQuestion(input) {
+    let search = $(input).val();
+   if(!search.match('^[\\s\\S]{4,14}')) {
+       $(input).css('border', '1px solid red')
+       $(input).val('');
+       $(input).attr('placeholder', '关键字不能少于4个字符大于14个字符');
+       return false;
+   }else {
+       $(input).css('border', '');
+   }
+   window.location.href = '/question/search?s=' + search;
+}
+
 function loadQuestion(pre, last_qid) {
     $.ajax({
         url: '/question/list',

@@ -6,6 +6,7 @@ $(document).ready(function() {
             $('#baseMessage').remove();
             }, 1000);
     }
+    refreshCurrentStatus();
     requestAnswerStatus();
 });
 $('#signBtn').click(function () {
@@ -22,6 +23,7 @@ $('#signBtn').click(function () {
 });
 
 $('#signBtn #status').click(function () {
+    window.location.href = '/answer/unread';
     return false;
 });
 
@@ -33,6 +35,29 @@ function getQueryString(name) {
     let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
     let r = window.location.search.substr(1).match(reg);
     if (r != null) return unescape(r[2]); return null;
+}
+
+function refreshCurrentStatus() {
+    $.ajax({
+        url: '/answer/status/current',
+        type: 'get',
+        data: {},
+        dataType: 'json',
+        success: function (res) {
+            if(res.status === 200 && res.data) {
+                $('#signBtn #status').html(res.data.answer_count);
+            }
+        }
+    })
+}
+
+function getCookie(name) {
+    let arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+    if(arr=document.cookie.match(reg))
+        return unescape(arr[2]);
+    else {
+        return null;
+    }
 }
 
 function requestAnswerStatus() {

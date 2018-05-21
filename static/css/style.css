@@ -113,6 +113,16 @@ form.registration-form fieldset {
 #answer-editor .form-group {
 	margin-top: 16px;
 }
+footer {
+	text-align: right;
+	font-size: 14px;
+}
+footer a:link, a:visited {
+	text-decoration:none;
+	margin-bottom: 35px;
+	margin-right: 35px;
+	font-size: 30px
+}
 
 /***** Media queries *****/
 

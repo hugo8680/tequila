@@ -9,9 +9,10 @@ from tornado import gen
 from tornado import web
 
 from handlers.base_handlers import BaseHandler
-from database.sql_utils.question import get_paged_questions, get_all_tags, create_question, get_question_by_qid
+from database.sql_utils.question import (get_paged_questions, get_all_tags, create_question, get_question_by_qid,
+                                         get_question_by_str, check_user_has_read)
 
-from utils.errcode import PARAMETER_ERR, CREATE_ERR
+from utils.errcode import PARAMETER_ERR, CREATE_ERR, PARAMETER_TOO_SHORT
 from conf import DEFAULT_UPLOAD_PATH, DOMAIN
 
 
@@ -121,11 +122,25 @@ class QuestionUpdateHandler(BaseHandler):
 class QuestionDetailHandler(BaseHandler):
     @gen.coroutine
     def get(self, qid, *args, **kwargs):
+        user = self.current_user
         try:
             qid = int(qid)
         except Exception as e:
             self.json_response(*PARAMETER_ERR)
             raise gen.Return()
+        if user:
+            yield check_user_has_read(user, qid)
 
         data = yield get_question_by_qid(qid)
         self.render('question_detail.html', data={'question': data})
+
+
+class QuestionSearchHandler(BaseHandler):
+    @gen.coroutine
+    def get(self, *args, **kwargs):
+        s = self.get_argument('s', '')
+        if not 4 < len(s) < 14:
+            self.render('search_result.html', data={'result': [], 'msg': '参数不符合要求！'})
+            raise gen.Return()
+        data = yield get_question_by_str(s)
+        self.render('search_result.html', data={'result': data, 'msg': ''})

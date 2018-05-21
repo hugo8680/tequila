@@ -64,6 +64,7 @@ ALTER TABLE t_user ADD INDEX idx_user(username(8), email(8), phone(8));
 ALTER TABLE t_question ADD INDEX idx_question(abstract(8), content(8));
 ALTER TABLE t_answer ADD INDEX idx_answer(content(8));
 ALTER TABLE t_tag ADD INDEX idx_tag(tag_name(2));
+ALTER TABLE t_answer ADD INDEX idx_answer_has_read(has_read(1));
 
 
 INSERT INTO t_user(username, email, password) VALUES (

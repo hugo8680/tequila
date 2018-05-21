@@ -4,6 +4,7 @@ from tornado import gen
 
 from database.tornado_mysql import escape_string
 from database.sql_utils.connect import async_connect
+from database.nosql_utils.connect import redis_connect
 
 
 @gen.coroutine
@@ -75,7 +76,7 @@ def create_question(tid, username, abstract, content):
 def get_question_by_qid(qid):
     conn = yield async_connect()
     cur = conn.cursor()
-    sql = "SELECT q.qid, q.abstract, q.content, q.view_count, q.answer_count, q.created_at, q.updated_at, u.username, t.tag_name FROM t_question AS q LEFT JOIN t_user as u ON u.uid=q.uid LEFT JOIN t_tag as t ON q.tid=t.tid WHERE qid=%d" % qid
+    sql = "SELECT q.qid, q.abstract, q.content, q.view_count, q.answer_count, q.created_at, q.updated_at, u.username, t.tag_name FROM t_question AS q LEFT JOIN t_user as u ON u.uid=q.uid LEFT JOIN t_tag as t ON q.tid=t.tid WHERE qid=%d;" % qid
     try:
         yield cur.execute(sql)
         data = cur.fetchone()
@@ -87,3 +88,42 @@ def get_question_by_qid(qid):
 
     raise gen.Return(data)
 
+
+@gen.coroutine
+def get_question_by_str(s):
+    conn = yield async_connect()
+    cur = conn.cursor()
+    sql = "SELECT q.qid, q.abstract, q.view_count, q.answer_count, q.created_at, q.updated_at, u.username, t.tag_name FROM t_question AS q "
+    sql += "LEFT JOIN t_user as u ON u.uid=q.uid LEFT JOIN t_tag as t ON q.tid=t.tid WHERE username LIKE '%{}%' OR content LIKE '%{}%';".format(s, s)
+    try:
+        yield cur.execute(sql)
+        data = cur.fetchall()
+    except Exception as e:
+        data = []
+    finally:
+        cur.close()
+        conn.close()
+    raise gen.Return(data)
+
+
+@gen.coroutine
+def check_user_has_read(user, qid):
+    redis = redis_connect()
+    redis.connect()
+
+    conn = yield async_connect()
+    cur = conn.cursor()
+    has_read = yield gen.Task(redis.sismember, 'user:has:read:%d' % qid, user)
+    if has_read:
+        data = 0
+        raise gen.Return(data)
+    redis.sadd('user:has:read:%d' % qid, user)
+    sql = "UPDATE t_question SET view_count = view_count + 1 WHERE qid = %d" % qid
+    try:
+        data = yield cur.execute(sql)
+    except Exception as e:
+        data = 0
+    finally:
+        cur.close()
+        conn.close()
+    raise gen.Return(data)

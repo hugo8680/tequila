@@ -76,6 +76,7 @@ $('#submit-answer').click(function () {
 });
 
 function loadAnswers() {
+    let curUsername = getCookie('username');
     $('#answer-list .list-group').html('');
     $.ajax({
         url: '/answer/list/' + getCurrentQid(),
@@ -90,19 +91,40 @@ function loadAnswers() {
                     let strHTML = "";
                     for(let i in answers) {
                         if(answers[i].status) {
-                            strHTML += "<p><b style='font-size: 16px;color: deeppink'>"+ answers[i].username + "</b> <small>" + answers[i].created_at + "</small></p>";
-                            strHTML += "<div style='background-color: lightblue' class='well well-sm list-group-item'>\n";
-                            strHTML += "<p class='glyphicon glyphicon-ok' style='font-size: 16px;color: red'> 已采纳</p>\n";
-                            strHTML += answers[i].content;
-                            strHTML += "</div>";
+                            if(curUsername === answers[i].username) {
+                                strHTML += "<div class='row'><div class='col-md-2'></div><div class='col-md-10'>";
+                                strHTML += "<p style='text-align: right'><b style='font-size: 20px;color: deeppink;font-weight: 800'>" + answers[i].username + "</b> <small>" + answers[i].created_at + "</small></p>";
+                                strHTML += "<div style='background-color: lightblue' class='well well-sm list-group-item'>\n";
+                                strHTML += "<p class='glyphicon glyphicon-ok' style='font-size: 16px;color: red'> 已采纳</p>\n";
+                                strHTML += answers[i].content;
+                                strHTML += "</div></div></div><br />";
+                            }else {
+                                strHTML += "<div class='row'><div class='col-md-10'>";
+                                strHTML += "<p><b style='font-size: 20px;color: deeppink;font-weight: 800'>" + answers[i].username + "</b> <small>" + answers[i].created_at + "</small></p>";
+                                strHTML += "<div style='background-color: lightblue' class='well well-sm list-group-item'>\n";
+                                strHTML += "<p class='glyphicon glyphicon-ok' style='font-size: 16px;color: red'> 已采纳</p>\n";
+                                strHTML += answers[i].content;
+                                strHTML += "</div><div class='col-md-2'></div></div>";
+                                strHTML += "</div><br />";
+                            }
                         }
                     }
                     for(let i in answers) {
                         if(!answers[i].status) {
-                            strHTML += "<p><b style='font-size: 16px;color: deeppink'>"+ answers[i].username + "</b> <small>" + answers[i].created_at + "</small></p>";
-                            strHTML += "<div class='well well-sm list-group-item'>\n";
-                            strHTML += answers[i].content;
-                            strHTML += "</div>";
+                            if(curUsername === answers[i].username) {
+                                strHTML += "<div class='row'><div class='col-md-2'></div><div class='col-md-10'>";
+                                strHTML += "<p style='text-align: right'><b style='font-size: 18px;color: deeppink;font-weight: 800'>" + answers[i].username + "</b> <small>" + answers[i].created_at + "</small></p>";
+                                strHTML += "<div style='background-color: #98FB98' class='well well-sm list-group-item'>\n";
+                                strHTML += answers[i].content;
+                                strHTML += "</div></div></div><br />";
+                            }else {
+                                strHTML += "<div class='row'><div class='col-md-10'>";
+                                strHTML += "<p><b style='font-size: 18px;color: deeppink;font-weight: 800'>" + answers[i].username + "</b> <small>" + answers[i].created_at + "</small></p>";
+                                strHTML += "<div style='background-color: #fff' class='well well-sm list-group-item'>\n";
+                                strHTML += answers[i].content;
+                                strHTML += "</div><div class='col-md-2'></div></div>";
+                                strHTML += "</div><br />";
+                            }
                         }
                     }
                     $('#answer-list .list-group').append(strHTML);

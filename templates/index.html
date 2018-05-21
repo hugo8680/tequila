@@ -6,12 +6,30 @@
     </div>
     <div class="col-md-8">
         <div class="container">
-            <a href="/question/create" class="btn btn-primary" style="float: left">我要提问</a>
-            <div style="margin-top: 50px" class="list-group" id="question-list">
+            <div class="row">
+                <div class="col-md-2" style="text-align: left">
+                    <div class="input-group">
+                        <h3 style="font-weight: 600">Questions!</h3>
+                        <a href="/question/create" class="btn btn-primary">NEW</a>
+                    </div>
+                </div>
             </div>
-            <div class="btn-group" style="float: left">
-                <button id="preQuestions" class="btn btn-info">上一页</button>
-                <button id="nextQuestions" class="btn btn-info">下一页</button>
+            <div style="margin-top: 10px" class="list-group" id="question-list">
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <button style="float: left" id="preQuestions" class="btn btn-info">上一页</button>
+                    <button style="float: left" id="nextQuestions" class="btn btn-info">下一页</button>
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <input id="search" type="text" class="form-control" placeholder="看看别人是不是提问了你想知道的问题？">
+                        <span id="search-btn" class="input-group-btn">
+                            <button class="btn btn-success" type="button">Go!</button>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

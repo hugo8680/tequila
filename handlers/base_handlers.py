@@ -4,8 +4,6 @@ import json
 
 from tornado.web import RequestHandler
 
-from database.nosql_utils.connect import redis_connect
-
 from utils.jsonEncoder import JsonEncoder
 
 
@@ -30,6 +28,3 @@ class BaseHandler(RequestHandler):
             'data': data
         }
         self.write(json.dumps(json_response, cls=JsonEncoder))
-
-    def close_redis_connections(self):
-        self.redis.disconnect()

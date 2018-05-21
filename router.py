@@ -5,9 +5,10 @@ from tornado.web import StaticFileHandler
 from handlers.index_handlers import IndexHandler
 from handlers.auth_handlers import LoginHandler, LogoutHandler, SignupHandler, AuthCodeHandler
 from handlers.question_handlers import (QuestionListHandler, QuestionCreateHandler, QuestionDeleteHandler,
-                                        QuestionUpdateHandler, QuestionDetailHandler, QuestionUploadPicHandler)
+                                        QuestionUpdateHandler, QuestionDetailHandler, QuestionUploadPicHandler,
+                                        QuestionSearchHandler)
 from handlers.answer_handlers import (AnswerListHandler, AnswerCreateHandler, AnswerDetailHandler, AnswerUpdateHandler,
-                                      AnswerDeleteHandler, AnswerStatusHandler)
+                                      AnswerDeleteHandler, AnswerStatusHandler, UnreadAnswerHandler, AnswerStatusCurrentHandler)
 
 from conf import DEFAULT_UPLOAD_PATH
 
@@ -41,6 +42,7 @@ ROUTERS += [
     (r'/question/detail/(\d+)', QuestionDetailHandler),
     (r'/question/delelte/(\d+)', QuestionDeleteHandler),
     (r'/question/picload', QuestionUploadPicHandler),
+    (r'/question/search', QuestionSearchHandler),
 ]
 
 
@@ -52,6 +54,8 @@ ROUTERS += [
     (r'/answer/detail/(\d+)', AnswerDetailHandler),
     (r'/asnwer/delete/(\d+)', AnswerDetailHandler),
     (r'/answer/status', AnswerStatusHandler),
+    (r'/answer/status/current', AnswerStatusCurrentHandler),
+    (r'/answer/unread', UnreadAnswerHandler),
 ]
 
 

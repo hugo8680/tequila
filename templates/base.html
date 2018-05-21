@@ -84,8 +84,16 @@
     {% end %}
 	{% block body %}
 	{% end %}
-    <footer style="text-align: right;font-size: 16px" class="footer navbar-fixed-bottom ">
-        <a href="#top" class="glyphicon glyphicon-eject">回到顶部</a>
+    <br /><br /><br /><br />
+    <footer class="footer navbar-fixed-bottom ">
+        <div class="row">
+            <div class="col-md-6">
+            </div>
+            <div class="col-md-6">
+                <a href="javascript:history.back(-1);" class="glyphicon glyphicon-menu-left"></a>
+                <a href="#top" class="glyphicon glyphicon-menu-up"></a>
+            </div>
+        </div>
     </footer>
     </body>
 <script src="{{ static_url('js/scripts.js') }}"></script>
