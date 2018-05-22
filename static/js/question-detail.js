@@ -113,7 +113,7 @@ function loadAnswers() {
                         if(!answers[i].status) {
                             if(curUsername === answers[i].username) {
                                 strHTML += "<div class='row'><div class='col-md-2'></div><div class='col-md-10'>";
-                                strHTML += "<p style='text-align: right'><b style='font-size: 18px;color: deeppink;font-weight: 800'>" + answers[i].username + "</b> <small>" + answers[i].created_at + "</small></p>";
+                                strHTML += "<p style='text-align: right'><a id='change-answer-"+ answers[i].aid +"' onclick='changeAnswer("+ answers[i].aid +")' style='margin-right: 6px' class='glyphicon glyphicon-pencil' href='#'></a> <a style='margin-right: 6px' id='delete-answer-"+ answers[i].aid +"' onclick='deleteAnswer("+ answers[i].aid +")' class='glyphicon glyphicon-trash' href='#'></a> <b style='font-size: 18px;color: deeppink;font-weight: 800'>" + answers[i].username + "</b> <small>" + answers[i].created_at + "</small></p>";
                                 strHTML += "<div style='background-color: #98FB98' class='well well-sm list-group-item'>\n";
                                 strHTML += answers[i].content;
                                 strHTML += "</div></div></div><br />";
@@ -140,4 +140,64 @@ function loadAnswers() {
 function getCurrentQid() {
     let pathname = window.location.pathname;
     return pathname.match('\\d{6}$')[0];
+}
+
+function questionChange(obj) {
+    alert('暂时不能修改');
+    return false;
+}
+
+function questionDelete(obj) {
+    $('#deleteModal').modal('show');
+    $('#confirmDelete').click(function () {
+        $.ajax({
+            url: '/question/delete/' + obj.id.substr(16, 21),
+            type: 'post',
+            data: {},
+            dataType: 'json',
+            success: function (res) {
+                if(res.status === 200) {
+                    window.location.href = '/';
+                }else {
+                    $('#answer-list').prepend("<div id='answer-list-message' class='alert alert-danger'>"+ res.message +"</div>");
+                }
+            }
+        })
+    });
+    return false;
+}
+
+function deleteAnswer(aid) {
+    $('#deleteModal').modal('show');
+    $('#confirmDelete').click(function () {
+       $.ajax({
+           url: '/answer/delete/' + aid,
+           type: 'post',
+           data: {
+               qid: getCurrentQid()
+           },
+           dataType: 'json',
+           success: function (res) {
+               $('#deleteModal').modal('hide');
+               if(res.status === 200) {
+                   loadAnswers();
+                   $('#answer-list').prepend("<div id='answer-list-message' class='alert alert-success'>删除成功</div>");
+                   setTimeout(function () {
+                       $('#answer-list-message').remove();
+                   }, 1000)
+               }else if(res.message) {
+                   $('#answer-list').prepend("<div id='answer-list-message' class='alert alert-danger'>"+ res.message +"</div>");
+                   setTimeout(function () {
+                       $('#answer-list-message').remove();
+                   }, 1000)
+               }
+           }
+       }) 
+    });
+    return false;
+}
+
+function changeAnswer(aid) {
+    alert('暂时不能修改');
+    return false;
 }

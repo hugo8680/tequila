@@ -50,6 +50,7 @@ class LogoutHandler(BaseHandler):
     def get(self, *args, **kwargs):
         next = self.get_argument('next', '')
         self.clear_cookie('auth-user')
+        self.clear_cookie('username')
         next = next + '?' + parse.urlencode({'m': '注销成功', 'e': 'success'})
         self.redirect(next)
 

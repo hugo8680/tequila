@@ -87,3 +87,16 @@ def check_answers(qid):
         cur.close()
         conn.close()
     raise gen.Return(data)
+
+
+@gen.coroutine
+def delete_answer_by_id(aid, qid, user):
+    conn = yield async_connect()
+    cur = conn.cursor()
+    sql = "DELETE FROM t_answer WHERE aid = %d AND qid = %d AND uid=(SELECT uid FROM t_user WHERE username='%s');" % (aid, qid, user)
+    print(sql)
+    try:
+        result = yield cur.execute(sql)
+    except Exception as e:
+        result = 0
+    raise gen.Return(result)

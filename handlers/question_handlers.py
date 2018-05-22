@@ -10,7 +10,7 @@ from tornado import web
 
 from handlers.base_handlers import BaseHandler
 from database.sql_utils.question import (get_paged_questions, get_all_tags, create_question, get_question_by_qid,
-                                         get_question_by_str, check_user_has_read)
+                                         get_question_by_str, check_user_has_read, get_filtered_questions, delete_question_by_id)
 
 from utils.errcode import PARAMETER_ERR, CREATE_ERR, PARAMETER_TOO_SHORT
 from conf import DEFAULT_UPLOAD_PATH, DOMAIN
@@ -107,8 +107,20 @@ class QuestionDeleteHandler(BaseHandler):
     def get(self, *args, **kwargs):
         pass
 
-    def post(self, *args, **kwargs):
-        pass
+    @gen.coroutine
+    @web.authenticated
+    def post(self, qid, *args, **kwargs):
+        user = self.current_user
+        try:
+            qid = int(qid)
+        except Exception as e:
+            self.json_response(*PARAMETER_ERR)
+            raise gen.Return()
+        result = yield delete_question_by_id(qid, user)
+        if not result:
+            self.json_response(*CREATE_ERR)
+            raise gen.Return()
+        self.json_response(200, 'OK', {})
 
 
 class QuestionUpdateHandler(BaseHandler):
@@ -139,8 +151,27 @@ class QuestionSearchHandler(BaseHandler):
     @gen.coroutine
     def get(self, *args, **kwargs):
         s = self.get_argument('s', '')
-        if not 4 < len(s) < 14:
+        if not 3 < len(s) < 14:
             self.render('search_result.html', data={'result': [], 'msg': '参数不符合要求！'})
             raise gen.Return()
         data = yield get_question_by_str(s)
         self.render('search_result.html', data={'result': data, 'msg': ''})
+
+
+class QuestionFilterHandler(BaseHandler):
+    @gen.coroutine
+    def get(self, name='', *args, **kwargs):
+        if name in ['newest', 'hotest', 'under', 'hasdone', 'prefer']:
+            data = yield get_filtered_questions(name, user=self.current_user)
+        elif name.startswith('t_'):
+            try:
+                tid = int(name.split('_')[1])
+            except Exception as e:
+                self.json_response(*PARAMETER_ERR)
+                raise gen.Return()
+            data = yield get_filtered_questions(name, user=self.current_user, tag=tid)
+        else:
+            self.json_response(*PARAMETER_ERR)
+            raise gen.Return()
+
+        self.json_response(200, 'OK', data={'question_list': data})

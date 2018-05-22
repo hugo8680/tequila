@@ -33,10 +33,10 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/"><span class="glyphicon glyphicon-home" style="color: #0F769F;font-size: 22px"> 问答学院</span></a>
+            <a class="navbar-brand" href="/"><span class="glyphicon glyphicon-home" style="color: #0F769F;font-size: 22px;font-weight: 600"> 问答学院</span></a>
         </div>
         <div class="collapse navbar-collapse" id="top-navbar-1">
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-right" style="font-weight: 600">
                 <li>
                     <a href="/index">问题</a>
                 </li>
@@ -47,7 +47,7 @@
                     <a href="/tag/list">标签</a>
                 </li>
 				<li>
-                    <a id="signBtn" href="" style="font-weight: 600">{% if username %}{{ username }} <span id="status" class="badge"></span>{% else %}登录{% end %}</a>
+                    <a id="signBtn" href="" style="color: #f0ad4e">{% if username %}{{ username }} <span id="status" class="badge"></span>{% else %}登录{% end %}</a>
 				</li>
             </ul>
         </div>

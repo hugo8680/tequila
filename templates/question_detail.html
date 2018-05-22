@@ -3,7 +3,12 @@
 {% block body %}
 <div id="question-detail" class="container">
     {% autoescape None %}
-    <h2>{{ question['abstract'] }}</h2>
+    <h2>{{ question['abstract'] }}
+        {% if username == question['username'] %}
+        <a id="question-change-{{ question['qid'] }}" onclick="questionChange(this)" style="margin-left: 5px;font-size: 14px" href="#" class="glyphicon glyphicon-pencil"></a>
+        <a id="question-delete-{{ question['qid'] }}" onclick="questionDelete(this)" style="margin-left: 5px;font-size: 14px" href="#" class="glyphicon glyphicon-trash"></a>
+        {% end %}
+    </h2>
     <p>by<b> {{ question['username'] }}</b> 创建时间: {{ question['created_at'] }}</p>
     <div class="content-detail">
         {{ question['content'] }}
@@ -21,6 +26,20 @@
             <button type="submit" id="submit-answer" class="btn btn-primary">提交答案</button>
         </div>
     </form>
+</div>
+<div id="deleteModal" class="modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">删除后将无法恢复，是否确定删除？</h4>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal">取消</button>
+                <button id="confirmDelete" class="btn btn-danger">删除</button>
+            </div>
+        </div>
+    </div>
 </div>
 <script type="text/javascript" src="{{ static_url('js/module.js') }}"></script>
 <script type="text/javascript" src="{{ static_url('js/hotkeys.js') }}"></script>

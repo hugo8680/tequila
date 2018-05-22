@@ -6,11 +6,12 @@ from tornado import gen
 from tornado import web
 
 from handlers.base_handlers import BaseHandler
-from database.sql_utils.answer import get_answers, create_answer, get_answer_status, get_unread_answer, check_answers
+from database.sql_utils.question import update_question_answer
+from database.sql_utils.answer import get_answers, create_answer, get_answer_status, get_unread_answer, check_answers, delete_answer_by_id
 from database.nosql_utils.connect import redis_connect
 from database.nosql_utils.channels import ANSWER_STATUS_CHANNEL
 
-from utils.errcode import PARAMETER_ERR, CREATE_ERR, USER_HAS_NOT_VALIDATE
+from utils.errcode import PARAMETER_ERR, CREATE_ERR, USER_HAS_NOT_VALIDATE, DEL_ERR
 from utils.jsonEncoder import JsonEncoder
 
 
@@ -79,8 +80,28 @@ class AnswerDeleteHandler(BaseHandler):
     def get(self, *args, **kwargs):
         pass
 
-    def post(self, *args, **kwargs):
-        pass
+    @gen.coroutine
+    @web.authenticated
+    def post(self, aid, *args, **kwargs):
+        qid = self.get_argument('qid', '')
+        try:
+            qid = int(qid)
+        except Exception as e:
+            self.json_response(*PARAMETER_ERR)
+            raise gen.Return()
+        try:
+            aid = int(aid)
+        except Exception as e:
+            self.json_response(*PARAMETER_ERR)
+            raise gen.Return()
+
+        user = self.current_user
+        result = yield delete_answer_by_id(aid, qid, user)
+        up_result = yield update_question_answer(qid)
+        if (not result) or (not up_result):
+            self.json_response(*DEL_ERR)
+            raise gen.Return()
+        self.json_response(200, 'OK', {})
 
 
 class AnswerStatusHandler(BaseHandler):

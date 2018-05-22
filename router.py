@@ -6,7 +6,7 @@ from handlers.index_handlers import IndexHandler
 from handlers.auth_handlers import LoginHandler, LogoutHandler, SignupHandler, AuthCodeHandler
 from handlers.question_handlers import (QuestionListHandler, QuestionCreateHandler, QuestionDeleteHandler,
                                         QuestionUpdateHandler, QuestionDetailHandler, QuestionUploadPicHandler,
-                                        QuestionSearchHandler)
+                                        QuestionSearchHandler, QuestionFilterHandler)
 from handlers.answer_handlers import (AnswerListHandler, AnswerCreateHandler, AnswerDetailHandler, AnswerUpdateHandler,
                                       AnswerDeleteHandler, AnswerStatusHandler, UnreadAnswerHandler, AnswerStatusCurrentHandler)
 
@@ -40,9 +40,10 @@ ROUTERS += [
     (r'/question/create', QuestionCreateHandler),
     (r'/question/update/(\d+)', QuestionUpdateHandler),
     (r'/question/detail/(\d+)', QuestionDetailHandler),
-    (r'/question/delelte/(\d+)', QuestionDeleteHandler),
+    (r'/question/delete/(\d+)', QuestionDeleteHandler),
     (r'/question/picload', QuestionUploadPicHandler),
     (r'/question/search', QuestionSearchHandler),
+    (r'/question/filter/(\w+)', QuestionFilterHandler),
 ]
 
 
@@ -52,7 +53,7 @@ ROUTERS += [
     (r'/answer/create', AnswerCreateHandler),
     (r'/answer/update/(\d+)', AnswerUpdateHandler),
     (r'/answer/detail/(\d+)', AnswerDetailHandler),
-    (r'/asnwer/delete/(\d+)', AnswerDetailHandler),
+    (r'/answer/delete/(\d+)', AnswerDeleteHandler),
     (r'/answer/status', AnswerStatusHandler),
     (r'/answer/status/current', AnswerStatusCurrentHandler),
     (r'/answer/unread', UnreadAnswerHandler),
