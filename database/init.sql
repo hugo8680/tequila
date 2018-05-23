@@ -1,3 +1,11 @@
+CREATE TABLE IF NOT EXISTS `t_group`(
+  `group_type` INT(1) NOT NULL DEFAULT 0,
+  `group_name` VARCHAR(12) NOT NULL,
+  `description` VARCHAR(40) NULL,
+  UNIQUE (group_type, group_name)
+);
+
+
 CREATE TABLE IF NOT EXISTS `t_user`(
 	`uid` INT(6) UNSIGNED AUTO_INCREMENT,
 	`status` BOOLEAN NOT NULL DEFAULT TRUE,
@@ -10,7 +18,9 @@ CREATE TABLE IF NOT EXISTS `t_user`(
 	`point` INT(4) DEFAULT 0,
 	`sex` BOOLEAN DEFAULT TRUE,
 	`address` VARCHAR(60) NULL,
+	`group_type` INT(1) NOT NULL DEFAULT 0,
 	CONSTRAINT pk_user_uid PRIMARY KEY (uid),
+	CONSTRAINT fk_user_group_group_type FOREIGN KEY (group_type) REFERENCES t_group(group_type),
 	UNIQUE (uid, username, email, phone)
 )AUTO_INCREMENT=100000;
 
@@ -60,6 +70,7 @@ CREATE TABLE IF NOT EXISTS `t_answer`(
 )AUTO_INCREMENT=100000;
 
 
+ALTER TABLE t_group ADD INDEX idx_group(group_name(4));
 ALTER TABLE t_user ADD INDEX idx_user(username(8), email(8), phone(8));
 ALTER TABLE t_question ADD INDEX idx_question(abstract(8), content(8));
 ALTER TABLE t_answer ADD INDEX idx_answer(content(8));
@@ -67,10 +78,26 @@ ALTER TABLE t_tag ADD INDEX idx_tag(tag_name(2));
 ALTER TABLE t_answer ADD INDEX idx_answer_has_read(has_read(1));
 
 
-INSERT INTO t_user(username, email, password) VALUES (
+INSERT INTO t_group(group_type, group_name, description) VALUES (
+  0,
+  'user',
+  'normal user'
+),(
+  1,
+  'admin',
+  'admin user'
+),(
+  2,
+  'superuser',
+  'super admin user'
+);
+
+
+INSERT INTO t_user(username, email, password, group_type) VALUES (
 	'hugo',
 	'zhang8680@outlook.com',
-	'18f3e922a1d1a9a140efbbe894bc829eeec260d8'
+	'18f3e922a1d1a9a140efbbe894bc829eeec260d8',
+	2
 );
 
 INSERT INTO t_tag(tag_name) VALUES ('Python'), ('C#'), ('Docker');

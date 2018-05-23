@@ -34,3 +34,19 @@ def create_user(username, password):
         cur.close()
         conn.close()
     raise gen.Return(data)
+
+
+@gen.coroutine
+def get_group_by_user(username):
+    conn = yield async_connect()
+    cur = conn.cursor()
+    sql = "SELECT group_type FROM t_user WHERE username='%s'"  % username
+    try:
+        yield cur.execute(sql)
+        data = cur.fetchone()
+    except Exception as e:
+        data = None
+    finally:
+        cur.close()
+        conn.close()
+    raise gen.Return(data)

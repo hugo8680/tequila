@@ -13,6 +13,7 @@ from database.nosql_utils.channels import ANSWER_STATUS_CHANNEL
 
 from utils.errcode import PARAMETER_ERR, CREATE_ERR, USER_HAS_NOT_VALIDATE, DEL_ERR
 from utils.jsonEncoder import JsonEncoder
+from utils.auth import login_required
 
 
 class AnswerListHandler(BaseHandler):
@@ -36,6 +37,7 @@ class AnswerCreateHandler(BaseHandler):
         self.redis.connect()
 
     @gen.coroutine
+    @login_required
     def post(self, *args, **kwargs):
         qid = self.get_argument('qid', '')
         content = self.get_argument('content', '')
@@ -81,7 +83,7 @@ class AnswerDeleteHandler(BaseHandler):
         pass
 
     @gen.coroutine
-    @web.authenticated
+    @login_required
     def post(self, aid, *args, **kwargs):
         qid = self.get_argument('qid', '')
         try:
@@ -143,6 +145,7 @@ class AnswerStatusCurrentHandler(BaseHandler):
 
 class UnreadAnswerHandler(BaseHandler):
     @gen.coroutine
+    @login_required
     def get(self, *args, **kwargs):
         user = self.current_user
         uquestions = yield get_unread_answer(user)

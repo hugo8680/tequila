@@ -6,13 +6,13 @@ import uuid
 import json
 
 from tornado import gen
-from tornado import web
 
 from handlers.base_handlers import BaseHandler
 from database.sql_utils.question import (get_paged_questions, get_all_tags, create_question, get_question_by_qid,
                                          get_question_by_str, check_user_has_read, get_filtered_questions, delete_question_by_id)
 
-from utils.errcode import PARAMETER_ERR, CREATE_ERR, PARAMETER_TOO_SHORT
+from utils.errcode import PARAMETER_ERR, CREATE_ERR
+from utils.auth import login_required
 from conf import DEFAULT_UPLOAD_PATH, DOMAIN
 
 
@@ -42,13 +42,13 @@ class QuestionListHandler(BaseHandler):
 
 
 class QuestionCreateHandler(BaseHandler):
-    @web.authenticated
+    @login_required
     @gen.coroutine
     def get(self, *args, **kwargs):
         tags = yield get_all_tags()
         self.render('question_create.html', data={'tags': tags})
 
-    @web.authenticated
+    @login_required
     @gen.coroutine
     def post(self, *args, **kwargs):
         tag_id = self.get_argument('tag_id', '')
@@ -72,12 +72,12 @@ class QuestionCreateHandler(BaseHandler):
 
 
 class QuestionUploadPicHandler(BaseHandler):
-    @web.authenticated
+    @login_required
     @gen.coroutine
     def get(self, *args, **kwargs):
         self.json_response(200, 'OK', {})
 
-    @web.authenticated
+    @login_required
     @gen.coroutine
     def post(self, *args, **kwargs):
         pics = self.request.files.get('pic', None)
@@ -108,7 +108,7 @@ class QuestionDeleteHandler(BaseHandler):
         pass
 
     @gen.coroutine
-    @web.authenticated
+    @login_required
     def post(self, qid, *args, **kwargs):
         user = self.current_user
         try:
