@@ -113,17 +113,26 @@ function loadAnswers() {
                         if(!answers[i].status) {
                             if(curUsername === answers[i].username) {
                                 strHTML += "<div class='row'><div class='col-md-2'></div><div class='col-md-10'>";
-                                strHTML += "<p style='text-align: right'><a id='change-answer-"+ answers[i].aid +"' onclick='changeAnswer("+ answers[i].aid +")' style='margin-right: 6px' class='glyphicon glyphicon-pencil' href='#'></a> <a style='margin-right: 6px' id='delete-answer-"+ answers[i].aid +"' onclick='deleteAnswer("+ answers[i].aid +")' class='glyphicon glyphicon-trash' href='#'></a> <b style='font-size: 18px;color: deeppink;font-weight: 800'>" + answers[i].username + "</b> <small>" + answers[i].created_at + "</small></p>";
+                                strHTML += "<p style='text-align: right'><a id='change-answer-"+ answers[i].aid +"' onclick='changeAnswer("+ answers[i].aid +")' style='margin-right: 6px' class='glyphicon glyphicon-pencil' href=''></a> <a style='margin-right: 6px' id='delete-answer-"+ answers[i].aid +"' onclick='deleteAnswer("+ answers[i].aid +")' class='glyphicon glyphicon-trash' href='###'></a> <b style='font-size: 18px;color: deeppink;font-weight: 800'>" + answers[i].username + "</b> <small>" + answers[i].created_at + "</small></p>";
                                 strHTML += "<div style='background-color: #98FB98' class='well well-sm list-group-item'>\n";
                                 strHTML += answers[i].content;
                                 strHTML += "</div></div></div><br />";
                             }else {
-                                strHTML += "<div class='row'><div class='col-md-10'>";
-                                strHTML += "<p><b style='font-size: 18px;color: deeppink;font-weight: 800'>" + answers[i].username + "</b> <small>" + answers[i].created_at + "</small></p>";
-                                strHTML += "<div style='background-color: #fff' class='well well-sm list-group-item'>\n";
-                                strHTML += answers[i].content;
-                                strHTML += "</div><div class='col-md-2'></div></div>";
-                                strHTML += "</div><br />";
+                                if(curUsername === $('#question-username').html()) {
+                                    strHTML += "<div class='row'><div class='col-md-10'>";
+                                    strHTML += "<p><b style='font-size: 18px;color: deeppink;font-weight: 800'>" + answers[i].username + "</b> <small>" + answers[i].created_at + "</small> <a onclick='adoptAnswer("+ answers[i].aid +");' id='answer-adopted-"+ answers[i].aid +"' style='font-size: 20px;margin-left: 10px;text-decoration: none' href='###' class='glyphicon glyphicon-heart-empty'></a></p>";
+                                    strHTML += "<div style='background-color: #fff' class='well well-sm list-group-item'>\n";
+                                    strHTML += answers[i].content;
+                                    strHTML += "</div><div class='col-md-2'></div></div>";
+                                    strHTML += "</div><br />";
+                                }else {
+                                    strHTML += "<div class='row'><div class='col-md-10'>";
+                                    strHTML += "<p><b style='font-size: 18px;color: deeppink;font-weight: 800'>" + answers[i].username + "</b> <small>" + answers[i].created_at + "</small></p>";
+                                    strHTML += "<div style='background-color: #fff' class='well well-sm list-group-item'>\n";
+                                    strHTML += answers[i].content;
+                                    strHTML += "</div><div class='col-md-2'></div></div>";
+                                    strHTML += "</div><br />";
+                                }
                             }
                         }
                     }
@@ -144,6 +153,25 @@ function getCurrentQid() {
 
 function questionChange(obj) {
     alert('暂时不能修改');
+    return false;
+}
+
+function adoptAnswer(aid) {
+    $.ajax({
+        url: '/answer/adopt/' + aid,
+        type: 'post',
+        data: {
+            qid: getCurrentQid()
+        },
+        dataType: 'json',
+        success: function (res) {
+            if(res.status === 200) {
+                loadAnswers();
+            }else {
+                alert(res.message)
+            }
+        }
+    });
     return false;
 }
 

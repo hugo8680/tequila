@@ -8,7 +8,8 @@ from handlers.question_handlers import (QuestionListHandler, QuestionCreateHandl
                                         QuestionUpdateHandler, QuestionDetailHandler, QuestionUploadPicHandler,
                                         QuestionSearchHandler, QuestionFilterHandler)
 from handlers.answer_handlers import (AnswerListHandler, AnswerCreateHandler, AnswerDetailHandler, AnswerUpdateHandler,
-                                      AnswerDeleteHandler, AnswerStatusHandler, UnreadAnswerHandler, AnswerStatusCurrentHandler)
+                                      AnswerDeleteHandler, AnswerStatusHandler, UnreadAnswerHandler, AnswerStatusCurrentHandler,
+                                      AnswerAdoptHandler)
 from handlers.user_handlers import (UserListHandler)
 
 from conf import DEFAULT_UPLOAD_PATH
@@ -59,6 +60,7 @@ ROUTERS += [
     (r'/answer/status', AnswerStatusHandler),
     (r'/answer/status/current', AnswerStatusCurrentHandler),
     (r'/answer/unread', UnreadAnswerHandler),
+    (r'/answer/adopt/(\d+)', AnswerAdoptHandler),
 ]
 
 

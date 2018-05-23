@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS `t_question`(
 	`content` VARCHAR(10240) NOT NULL,
 	`view_count` INT NOT NULL DEFAULT 0,
 	`answer_count` INT NOT NULL DEFAULT 0,
+	`adopted_count` INT(1) NOT NULL DEFAULT 0,
 	`uid` INT(6) UNSIGNED NOT NULL,
 	`tid` INT(6) UNSIGNED NOT NULL,
 	CONSTRAINT pk_question_qid PRIMARY KEY (qid),

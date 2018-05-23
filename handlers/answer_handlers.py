@@ -7,11 +7,12 @@ from tornado import web
 
 from handlers.base_handlers import BaseHandler
 from database.sql_utils.question import update_question_answer
-from database.sql_utils.answer import get_answers, create_answer, get_answer_status, get_unread_answer, check_answers, delete_answer_by_id
+from database.sql_utils.answer import (get_answers, create_answer, get_answer_status, get_unread_answer, check_answers,
+                                       delete_answer_by_id, adopt_answer, add_point, get_adopted_count)
 from database.nosql_utils.connect import redis_connect
 from database.nosql_utils.channels import ANSWER_STATUS_CHANNEL
 
-from utils.errcode import PARAMETER_ERR, CREATE_ERR, USER_HAS_NOT_VALIDATE, DEL_ERR
+from utils.errcode import PARAMETER_ERR, CREATE_ERR, USER_HAS_NOT_VALIDATE, DEL_ERR, ADD_POINT_ERR, ADOPT_COUNT_ERR
 from utils.jsonEncoder import JsonEncoder
 from utils.auth import login_required
 
@@ -150,3 +151,39 @@ class UnreadAnswerHandler(BaseHandler):
         user = self.current_user
         uquestions = yield get_unread_answer(user)
         self.render('unread_answer.html', data={'unread_questions': uquestions})
+
+
+class AnswerAdoptHandler(BaseHandler):
+    @gen.coroutine
+    @login_required
+    def post(self, aid, *args, **kwargs):
+        qid = self.get_argument('qid', '')
+        user = self.current_user
+
+        try:
+            aid = int(aid)
+        except Exception as e:
+            self.json_response(*PARAMETER_ERR)
+            raise gen.Return()
+        try:
+            qid = int(qid)
+        except Exception as e:
+            self.json_response(*PARAMETER_ERR)
+            raise gen.Return()
+
+        adopted_data = yield get_adopted_count(qid, user)
+        if adopted_data.get('adopted_count', 0) >= 3:
+            self.json_response(*ADOPT_COUNT_ERR)
+            raise gen.Return()
+
+        data = yield adopt_answer(aid, qid)
+        if not data:
+            self.json_response(*CREATE_ERR)
+            raise gen.Return()
+
+        data_point = yield add_point(aid, qid, user)
+        if not data_point:
+            self.json_response(*ADD_POINT_ERR)
+            raise gen.Return()
+
+        self.json_response(200, 'OK', {})

@@ -9,7 +9,7 @@ from database.sql_utils.connect import async_connect
 def get_answers(qid):
     conn = yield async_connect()
     cur = conn.cursor()
-    sql = "SELECT a.aid, a.status, a.created_at, a.updated_at, a.content, u.username FROM t_answer a LEFT JOIN t_user u ON u.uid=a.uid WHERE qid=%d ORDER BY a.created_at DESC;" % qid
+    sql = "SELECT a.aid, a.status, a.created_at, a.updated_at, a.content, u.username FROM t_answer a LEFT JOIN t_user u ON u.uid=a.uid WHERE qid=%d ORDER BY a.created_at ASC;" % qid
     try:
         yield cur.execute(sql)
         data = cur.fetchall()
@@ -94,9 +94,57 @@ def delete_answer_by_id(aid, qid, user):
     conn = yield async_connect()
     cur = conn.cursor()
     sql = "DELETE FROM t_answer WHERE aid = %d AND qid = %d AND uid=(SELECT uid FROM t_user WHERE username='%s');" % (aid, qid, user)
-    print(sql)
     try:
         result = yield cur.execute(sql)
     except Exception as e:
         result = 0
     raise gen.Return(result)
+
+
+@gen.coroutine
+def adopt_answer(aid, qid):
+    conn = yield async_connect()
+    cur = conn.cursor()
+    sql = "UPDATE t_answer SET status=TRUE WHERE aid=%d AND qid=(SELECT qid FROM t_question WHERE qid=%d);" % (aid, qid)
+    try:
+        data = yield cur.execute(sql)
+    except Exception as e:
+        data = 0
+    finally:
+        cur.close()
+        conn.close()
+    raise gen.Return(data)
+
+
+@gen.coroutine
+def add_point(aid, qid, user):
+    conn = yield async_connect()
+    cur = conn.cursor()
+    sql1 = "UPDATE t_user SET point = point + 1 WHERE uid = (SELECT uid FROM t_answer WHERE aid=%d AND qid=%d);" % (aid, qid)
+    sql2 = "UPDATE t_question SET adopted_count = adopted_count + 1 WHERE qid = %d AND uid = (SELECT uid FROM t_user WHERE username='%s');" % (qid, user)
+    try:
+        data1 = yield cur.execute(sql1)
+        data2 = yield cur.execute(sql2)
+        data = data1 and data2
+    except Exception as e:
+        data = 0
+    finally:
+        cur.close()
+        conn.close()
+    raise gen.Return(data)
+
+
+@gen.coroutine
+def get_adopted_count(qid, user):
+    conn = yield async_connect()
+    cur = conn.cursor()
+    sql = "SELECT adopted_count FROM t_question WHERE qid=%d AND uid=(SELECT uid FROM t_user WHERE username='%s')" % (qid, user)
+    try:
+        yield cur.execute(sql)
+        data = cur.fetchone()
+    except Exception as e:
+        data = {}
+    finally:
+        cur.close()
+        conn.close()
+    raise gen.Return(data)

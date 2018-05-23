@@ -5,11 +5,11 @@
     {% autoescape None %}
     <h2>{{ question['abstract'] }}
         {% if username == question['username'] %}
-        <a id="question-change-{{ question['qid'] }}" onclick="questionChange(this)" style="margin-left: 5px;font-size: 14px" href="#" class="glyphicon glyphicon-pencil"></a>
-        <a id="question-delete-{{ question['qid'] }}" onclick="questionDelete(this)" style="margin-left: 5px;font-size: 14px" href="#" class="glyphicon glyphicon-trash"></a>
+        <a id="question-change-{{ question['qid'] }}" onclick="questionChange(this)" style="margin-left: 5px;font-size: 14px" href="###" class="glyphicon glyphicon-pencil"></a>
+        <a id="question-delete-{{ question['qid'] }}" onclick="questionDelete(this)" style="margin-left: 5px;font-size: 14px" href="###" class="glyphicon glyphicon-trash"></a>
         {% end %}
     </h2>
-    <p>by<b> {{ question['username'] }}</b> 创建时间: {{ question['created_at'] }}</p>
+    <p>by <b id="question-username">{{ question['username'] }}</b> 创建时间: {{ question['created_at'] }}</p>
     <div class="content-detail">
         {{ question['content'] }}
     </div>
