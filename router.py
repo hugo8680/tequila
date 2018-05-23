@@ -10,7 +10,7 @@ from handlers.question_handlers import (QuestionListHandler, QuestionCreateHandl
 from handlers.answer_handlers import (AnswerListHandler, AnswerCreateHandler, AnswerDetailHandler, AnswerUpdateHandler,
                                       AnswerDeleteHandler, AnswerStatusHandler, UnreadAnswerHandler, AnswerStatusCurrentHandler,
                                       AnswerAdoptHandler)
-from handlers.user_handlers import (UserListHandler)
+from handlers.user_handlers import (UserListHandler, UserSearchHandler)
 
 from conf import DEFAULT_UPLOAD_PATH
 
@@ -25,6 +25,7 @@ ROUTERS = [
 # USER
 ROUTERS += [
     (r'/user/list', UserListHandler),
+    (r'/user/search', UserSearchHandler),
 ]
 
 
