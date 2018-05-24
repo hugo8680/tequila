@@ -11,6 +11,7 @@ from handlers.answer_handlers import (AnswerListHandler, AnswerCreateHandler, An
                                       AnswerDeleteHandler, AnswerStatusHandler, UnreadAnswerHandler, AnswerStatusCurrentHandler,
                                       AnswerAdoptHandler)
 from handlers.user_handlers import (UserListHandler, UserSearchHandler)
+from handlers.tag_handlers import (TagListHandler,)
 
 from conf import DEFAULT_UPLOAD_PATH
 
@@ -67,7 +68,7 @@ ROUTERS += [
 
 # TAG
 ROUTERS += [
-
+    (r'/tag/list', TagListHandler),
 ]
 
 

@@ -12,6 +12,7 @@ from handlers.base_handlers import BaseHandler
 from database.sql_utils.auth import get_user_by_username, create_user
 
 from utils.auth_code import get_pic_code
+from utils.logger import logger
 from utils.errcode import LOGIN_VCODE_ERR, PASSWORD_ERR, USERNAME_ERR, USER_EXISTS, USER_CREATE_ERR
 
 
@@ -41,7 +42,7 @@ class LoginHandler(BaseHandler):
             raise gen.Return()
 
         self.set_secure_cookie('auth-user', data.get('username', ''))
-        self.set_cookie('username', data.get('username', ''))
+        self.set_cookie('username', data.get('username', ''), expires_days=30)
         self.json_response(200, 'OK', {})
 
 

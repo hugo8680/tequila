@@ -37,3 +37,60 @@ REDIS = {
         'selected_db': 0,
     }
 }
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "simple": {
+            'format': '%(asctime)s [%(name)s:%(lineno)d] [%(levelname)s]- %(message)s'
+        },
+        'standard': {
+            'format': '%(asctime)s [%(threadName)s:%(thread)d] [%(name)s:%(lineno)d] [%(levelname)s]- %(message)s'
+        },
+    },
+
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "DEBUG",
+            "formatter": "simple",
+            "stream": "ext://sys.stdout"
+        },
+
+        "file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "level": "INFO",
+            "formatter": "simple",
+            "filename": os.path.join(os.path.dirname(__file__), 'tequila.log'),
+            'mode': 'w+',
+            "maxBytes": 1024*1024*5,  # 5 MB
+            "backupCount": 20,
+            "encoding": "utf8"
+        },
+        "admin_login": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "level": "INFO",
+            "formatter": "simple",
+            "filename": os.path.join(os.path.dirname(__file__), 'admin.log'),
+            'mode': 'w+',
+            "maxBytes": 1024*1024*2,  # 5 MB
+            "backupCount": 20,
+            "encoding": "utf8"
+        },
+    },
+
+    "loggers": {
+        "console": {
+            "level": "INFO",
+            "handlers": ["console"],
+            "propagate": "no"
+        },
+        "file": {
+            "level": "INFO",
+            "handlers": ["file"],
+            "porpagate": "no"
+        }
+    },
+}

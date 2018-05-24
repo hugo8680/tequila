@@ -3,8 +3,9 @@
 import os
 import sys
 import socket
+import logging
 
-from tornado import web, gen, ioloop, httpserver, process, netutil
+from tornado import web, ioloop, httpserver, process, netutil
 
 from router import ROUTERS
 from conf import SETTINGS, DATABASE

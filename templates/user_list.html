@@ -7,6 +7,7 @@
     <div class="col-md-6" style="text-align: left;">
         <div>
             <h3>用户赏金记录 RANK 50</h3>
+            {% if current_user %}
             <b>
                 <span>当前用户： </span>
                 <span>{{ current_user['username'] }} </span>
@@ -14,13 +15,15 @@
                 <span>{{ current_user['point'] }} </span>
                 <span>排名： </span>
                 <span>{{ int(current_user['rank']) }}</span>
-                <label for="search-user"></label>
             </b>
+            {% else %}
+            无法获取当前用户信息
+            {% end %}
             <div class="form-group" style="float: right">
                 <input type="text" class="form-control" id="search-user" style="width: 300px" placeholder="查询用户" />
             </div>
         </div>
-        <div id="user-list" class="list-group" style="margin-top: 20px">
+        <div id="user-list" class="list-group" style="margin-top: 60px">
             {% for i in user_list %}
             {% if i['rank'] <= 10 %}
             <div class="list-group-item list-group-item-success">

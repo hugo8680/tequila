@@ -5,9 +5,14 @@ import json
 from tornado.web import RequestHandler
 
 from utils.jsonEncoder import JsonEncoder
+from utils.logger import logger
 
 
 class BaseHandler(RequestHandler):
+    def prepare(self):
+        log = logger('file')
+        log.info(self.request)
+
     def get_current_user(self):
         return self.get_secure_cookie('auth-user').decode('utf-8') if self.get_secure_cookie('auth-user') else ''
 

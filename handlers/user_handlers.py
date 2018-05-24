@@ -31,7 +31,7 @@ class UserSearchHandler(BaseHandler):
     @login_required
     def get(self, *args, **kwargs):
         s = self.get_argument('s', '')
-        if not 4 <= len(s) <= 12:
+        if not 2 <= len(s) <= 12:
             self.json_response(*PARAMETER_ERR)
             raise gen.Return()
 

@@ -1,10 +1,10 @@
 $('#search-user').keydown(function (event) {
     if(event.keyCode === 13) {
         let s = $('#search-user').val();
-        if(!s.match('\\w{4,12}')) {
+        if(!s.match('\\w{2,12}')) {
             $('#search-user').val('');
             $('#search-user').css('border', '1px solid red');
-            $('#search-user').attr('placeholder', '用户名应该为4-12位之间的字母数字下划线');
+            $('#search-user').attr('placeholder', '用户名应该为2-12位之间的字母数字下划线');
             return false;
         }else {
             $('#search-user').val('');
