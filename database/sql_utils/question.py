@@ -69,25 +69,11 @@ def get_filtered_questions(name, user=None, tag=None):
 
 
 @gen.coroutine
-def get_all_tags():
-    conn = yield async_connect()
-    cur = conn.cursor()
-    sql = "SELECT tid, tag_name FROM t_tag ORDER BY tid;"
-    try:
-        yield cur.execute(sql)
-        data = cur.fetchall()
-    except Exception as e:
-        data = []
-    finally:
-        cur.close()
-        conn.close()
-    raise gen.Return(data)
-
-
-@gen.coroutine
 def create_question(tid, username, abstract, content):
     conn = yield async_connect()
     cur = conn.cursor()
+    if isinstance(abstract, str):
+        abstract = escape_string(abstract)
     if isinstance(content, str):
         content = escape_string(content)
 

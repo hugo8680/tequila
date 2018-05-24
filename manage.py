@@ -3,12 +3,15 @@
 import os
 import sys
 import socket
-import logging
 
 from tornado import web, ioloop, httpserver, process, netutil
 
 from router import ROUTERS
 from conf import SETTINGS, DATABASE
+
+from utils.logger import logger
+
+log = logger('admin')
 
 
 class Application(web.Application):
@@ -37,13 +40,16 @@ if __name__ == '__main__':
 
     elif args[0] == 'migrate':
         config = DATABASE.get('default', {})
-        init_sql = 'mysql -u{user} -p{password} -D{database} -A < database/init-with-data.sql'.format(
+        init_sql = 'mysql -u{user} -p{password} -D{database} -A < database/migration.sql'.format(
             user=config.get('user', 'root'),
             password=config.get('password', ''),
             database=config.get('database', 'tequila')
         )
         print('Initializing tables to database {}...'.format(config.get('database')))
-        os.system(init_sql)
+        data = os.system(init_sql)
+        if data == 256:
+            log.info('Seems like you havent\'t create the database, try:\n \'create database tequila default character set utf8;\'')
+            print('Seems like you havent\'t create the database, try:\n \'create database tequila default character set utf8;\'')
         print('Completed.')
 
     elif args[0] == 'shell':

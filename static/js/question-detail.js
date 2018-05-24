@@ -12,7 +12,7 @@ $(document).ready(function () {
 function editorRefresh() {
     new Simditor({
         textarea: $('#answer-textarea'),
-        placeholder: '请输入18-5000字的答案...',
+        placeholder: '请输入18-10000字的答案...',
         toolbarFloat: true,
         toolbarFloatOffset: 0,
         pasteImage: true,//允许粘贴图片
@@ -45,7 +45,7 @@ function editorRefresh() {
 
 $('#submit-answer').click(function () {
     let content = $('#answer-textarea').val();
-    if(!content.match('^[\\s\\S]{18,5000}$')){
+    if(!content.match('^[\\s\\S]{18,10000}$')){
         $('#answer-editor').prepend("<div id='characterErr' style='margin-top: 10px' class='alert alert-danger'>字符数量不符合要求</div>");
         return false;
     }else {

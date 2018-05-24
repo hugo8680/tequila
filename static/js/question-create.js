@@ -38,7 +38,7 @@ $('#submit-question').click(function () {
     let abstract = $('#question-abstract').val();
     let content = $('#question-content').val();
     let tag_id = $('#question-tag').find('option:selected').attr('id');
-    if(!abstract.match('^[\\s\\S]{7,24}$')) {
+    if(!abstract.match('^[\\s\\S]{7,40}$')) {
         $('#question-abstract').css('border', '1px solid red');
         $('#editorForm').prepend("<div id='absMessage' class='alert alert-danger'>简述长度不符合要求</div>");
         setTimeout(function () {

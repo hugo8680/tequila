@@ -8,7 +8,8 @@ import json
 from tornado import gen
 
 from handlers.base_handlers import BaseHandler
-from database.sql_utils.question import (get_paged_questions, get_all_tags, create_question, get_question_by_qid,
+from database.sql_utils.tag import get_all_tags
+from database.sql_utils.question import (get_paged_questions, create_question, get_question_by_qid,
                                          get_question_by_str, check_user_has_read, get_filtered_questions, delete_question_by_id)
 
 from utils.errcode import PARAMETER_ERR, CREATE_ERR

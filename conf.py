@@ -69,9 +69,9 @@ LOGGING = {
             "backupCount": 20,
             "encoding": "utf8"
         },
-        "admin_login": {
+        "admin": {
             "class": "logging.handlers.RotatingFileHandler",
-            "level": "INFO",
+            "level": "DEBUG",
             "formatter": "simple",
             "filename": os.path.join(os.path.dirname(__file__), 'admin.log'),
             'mode': 'w+',
@@ -90,6 +90,11 @@ LOGGING = {
         "file": {
             "level": "INFO",
             "handlers": ["file"],
+            "porpagate": "no"
+        },
+        "admin": {
+            "level": "INFO",
+            "handlers": ["admin"],
             "porpagate": "no"
         }
     },

@@ -125,7 +125,7 @@ def add_point(aid, qid, user):
     conn = yield async_connect()
     cur = conn.cursor()
     sql1 = "UPDATE t_user SET point = point + 1 WHERE uid = (SELECT uid FROM t_answer WHERE aid=%d AND qid=%d);" % (aid, qid)
-    sql2 = "UPDATE t_question SET adopted_count = adopted_count + 1 WHERE qid = %d AND uid = (SELECT uid FROM t_user WHERE username='%s');" % (qid, user)
+    sql2 = "UPDATE t_question SET status=TRUE, adopted_count = adopted_count + 1 WHERE qid = %d AND uid = (SELECT uid FROM t_user WHERE username='%s');" % (qid, user)
     try:
         data1 = yield cur.execute(sql1)
         data2 = yield cur.execute(sql2)

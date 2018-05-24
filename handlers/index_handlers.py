@@ -4,7 +4,7 @@ from tornado import gen
 
 from handlers.base_handlers import BaseHandler
 
-from database.sql_utils.question import get_all_tags
+from database.sql_utils.tag import get_all_tags
 
 
 class IndexHandler(BaseHandler):
