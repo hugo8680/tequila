@@ -84,6 +84,7 @@ class SignupHandler(BaseHandler):
             raise gen.Return()
 
         self.set_secure_cookie('auth-user', username)
+        self.set_cookie('username', username, expires_days=30)
         self.json_response(200, 'OK', {})
 
 

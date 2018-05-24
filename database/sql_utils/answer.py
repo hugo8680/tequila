@@ -2,6 +2,7 @@
 
 from tornado import gen
 
+from database.tornado_mysql import escape_string
 from database.sql_utils.connect import async_connect
 
 
@@ -41,6 +42,9 @@ def get_answer_status(user):
 def create_answer(qid, user, content):
     conn = yield  async_connect()
     cur = conn.cursor()
+    if isinstance(content, str):
+        content = escape_string(content)
+
     sql1 = "INSERT INTO t_answer (qid, uid, content) VALUES (%d, (SELECT uid FROM t_user WHERE username='%s'), '%s');" % (qid, user, content)
     sql2 = "UPDATE t_question SET answer_count = answer_count + 1 WHERE qid=%d;" % qid
     try:

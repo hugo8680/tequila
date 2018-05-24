@@ -37,7 +37,7 @@ if __name__ == '__main__':
 
     elif args[0] == 'migrate':
         config = DATABASE.get('default', {})
-        init_sql = 'mysql -u{user} -p{password} -D{database} -A < database/init.sql'.format(
+        init_sql = 'mysql -u{user} -p{password} -D{database} -A < database/init-with-data.sql'.format(
             user=config.get('user', 'root'),
             password=config.get('password', ''),
             database=config.get('database', 'tequila')
