@@ -2,7 +2,7 @@
 
 import os
 
-DOMAIN = 'http://127.0.0.1:8000'
+DOMAIN = 'http://127.0.0.1:9000'
 
 DEFAULT_UPLOAD_PATH = os.path.join(os.path.dirname(__file__), 'pics')
 
@@ -23,7 +23,7 @@ DATABASE = {
         'port': 3306,
         'database': 'tequila',
         'user': 'root',
-        'password': 'woaini',
+        'password': 'woaini8680..',
         'charset': 'utf8'
     }
 }
@@ -87,8 +87,7 @@ LOGGING = {
             "handlers": ["console"],
             "propagate": "no"
         },
-        "file": {
-            "level": "INFO",
+        "file": { "level": "INFO",
             "handlers": ["file"],
             "porpagate": "no"
         },

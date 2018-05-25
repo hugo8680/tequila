@@ -24,11 +24,13 @@ if __name__ == '__main__':
     if args[0] == 'run':
         app = Application()
         print('Starting server on port 9000...')
-        sockets = netutil.bind_sockets(9000, '127.0.0.1', socket.AF_UNSPEC)
-        process.fork_processes(5)
+        # sockets = netutil.bind_sockets(9000, '127.0.0.1', socket.AF_UNSPEC)
+        # process.fork_processes(5)
         server = httpserver.HTTPServer(app)
-        server.add_sockets(sockets)
-        ioloop.IOLoop.current().start()
+        server.listen(9000)
+        server.start(num_processes=4)
+        # server.add_sockets(sockets)
+        ioloop.IOLoop.instance().start()
 
     elif args[0] == 'dbshell':
         config = DATABASE.get('default', {})
