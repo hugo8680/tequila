@@ -14,6 +14,7 @@ function editorRefresh() {
         textarea: $('#answer-textarea'),
         placeholder: '请输入18-10000字的答案...',
         toolbarFloat: true,
+        cleanPaste: true,
         toolbarFloatOffset: 0,
         pasteImage: true,//允许粘贴图片
         toolbarHidden: false,
@@ -47,6 +48,9 @@ $('#submit-answer').click(function () {
     let content = $('#answer-textarea').val();
     if(!content.match('^[\\s\\S]{18,10000}$')){
         $('#answer-editor').prepend("<div id='characterErr' style='margin-top: 10px' class='alert alert-danger'>字符数量不符合要求</div>");
+        setTimeout(function () {
+           $('#characterErr').remove();
+        }, 400);
         return false;
     }else {
         $('#characterErr').remove();
@@ -94,16 +98,20 @@ function loadAnswers() {
                             if(curUsername === answers[i].username) {
                                 strHTML += "<div class='row'><div class='col-md-2'></div><div class='col-md-10'>";
                                 strHTML += "<p style='text-align: right'><b style='font-size: 20px;color: deeppink;font-weight: 800'>" + answers[i].username + "</b> <small>" + answers[i].created_at + "</small></p>";
-                                strHTML += "<div style='background-color: lightblue' class='well well-sm list-group-item'>\n";
+                                strHTML += "<div style='background-color: #CAE1FF' class='well well-sm list-group-item'>\n";
                                 strHTML += "<p class='glyphicon glyphicon-ok' style='font-size: 16px;color: red'> 已采纳</p>\n";
+                                strHTML += "<div class='container' style='margin-top: 20px'>";
                                 strHTML += answers[i].content;
+                                strHTML += "</div>\n";
                                 strHTML += "</div></div></div><br />";
                             }else {
                                 strHTML += "<div class='row'><div class='col-md-10'>";
                                 strHTML += "<p><b style='font-size: 20px;color: deeppink;font-weight: 800'>" + answers[i].username + "</b> <small>" + answers[i].created_at + "</small></p>";
-                                strHTML += "<div style='background-color: lightblue' class='well well-sm list-group-item'>\n";
+                                strHTML += "<div style='background-color: #CAE1FF' class='well well-sm list-group-item'>\n";
                                 strHTML += "<p class='glyphicon glyphicon-ok' style='font-size: 16px;color: red'> 已采纳</p>\n";
+                                strHTML += "<div class='container' style='margin-top: 20px'>";
                                 strHTML += answers[i].content;
+                                strHTML += "</div>\n";
                                 strHTML += "</div><div class='col-md-2'></div></div>";
                                 strHTML += "</div><br />";
                             }
@@ -114,22 +122,28 @@ function loadAnswers() {
                             if(curUsername === answers[i].username) {
                                 strHTML += "<div class='row'><div class='col-md-2'></div><div class='col-md-10'>";
                                 strHTML += "<p style='text-align: right'><a id='change-answer-"+ answers[i].aid +"' onclick='changeAnswer("+ answers[i].aid +")' style='margin-right: 6px' class='glyphicon glyphicon-pencil' href=''></a> <a style='margin-right: 6px' id='delete-answer-"+ answers[i].aid +"' onclick='deleteAnswer("+ answers[i].aid +")' class='glyphicon glyphicon-trash' href='###'></a> <b style='font-size: 18px;color: deeppink;font-weight: 800'>" + answers[i].username + "</b> <small>" + answers[i].created_at + "</small></p>";
-                                strHTML += "<div style='background-color: #98FB98' class='well well-sm list-group-item'>\n";
+                                strHTML += "<div style='background-color: #C1FFC1' class='well well-sm list-group-item'>\n";
+                                strHTML += "<div class='container' style='margin-top: 20px'>";
                                 strHTML += answers[i].content;
+                                strHTML += "</div>";
                                 strHTML += "</div></div></div><br />";
                             }else {
                                 if(curUsername === $('#question-username').html()) {
                                     strHTML += "<div class='row'><div class='col-md-10'>";
                                     strHTML += "<p><b style='font-size: 18px;color: deeppink;font-weight: 800'>" + answers[i].username + "</b> <small>" + answers[i].created_at + "</small> <a onclick='adoptAnswer("+ answers[i].aid +");' id='answer-adopted-"+ answers[i].aid +"' style='font-size: 20px;margin-left: 10px;text-decoration: none' href='###' class='glyphicon glyphicon-heart-empty'></a></p>";
                                     strHTML += "<div style='background-color: #fff' class='well well-sm list-group-item'>\n";
+                                    strHTML += "<div class='container' style='margin-top: 20px'>";
                                     strHTML += answers[i].content;
+                                    strHTML += "</div>";
                                     strHTML += "</div><div class='col-md-2'></div></div>";
                                     strHTML += "</div><br />";
                                 }else {
                                     strHTML += "<div class='row'><div class='col-md-10'>";
                                     strHTML += "<p><b style='font-size: 18px;color: deeppink;font-weight: 800'>" + answers[i].username + "</b> <small>" + answers[i].created_at + "</small></p>";
                                     strHTML += "<div style='background-color: #fff' class='well well-sm list-group-item'>\n";
+                                    strHTML += "<div class='container' style='margin-top: 20px'>";
                                     strHTML += answers[i].content;
+                                    strHTML += "</div>";
                                     strHTML += "</div><div class='col-md-2'></div></div>";
                                     strHTML += "</div><br />";
                                 }

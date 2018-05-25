@@ -3,6 +3,7 @@ let editor = new Simditor({
     placeholder: '请输入18-10000字的详细描述...',
     oolbarFloat: true,
     toolbarFloatOffset: 0,
+    cleanPaste: true,
     pasteImage: true,//允许粘贴图片
     toolbarHidden: false,
     locale: 'zh-CN',

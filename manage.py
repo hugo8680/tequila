@@ -23,9 +23,9 @@ if __name__ == '__main__':
     args = sys.argv[1:]
     if args[0] == 'run':
         app = Application()
-        print('Starting server on port 8000...')
-        sockets = netutil.bind_sockets(8000, '127.0.0.1', socket.AF_UNSPEC)
-        process.fork_processes(1)
+        print('Starting server on port 9000...')
+        sockets = netutil.bind_sockets(9000, '127.0.0.1', socket.AF_UNSPEC)
+        process.fork_processes(5)
         server = httpserver.HTTPServer(app)
         server.add_sockets(sockets)
         ioloop.IOLoop.current().start()
