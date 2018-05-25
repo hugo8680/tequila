@@ -23,7 +23,7 @@ DATABASE = {
         'port': 3306,
         'database': 'tequila',
         'user': 'root',
-        'password': 'woaini8680..',
+        'password': 'woaini',
         'charset': 'utf8'
     }
 }
@@ -98,3 +98,8 @@ LOGGING = {
         }
     },
 }
+
+try:
+    from local_conf import *
+except Exception as e:
+    print('You should add an extra local_conf.py into this directory.')
