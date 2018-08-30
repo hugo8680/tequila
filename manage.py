@@ -28,7 +28,8 @@ if __name__ == '__main__':
         # process.fork_processes(5)
         server = httpserver.HTTPServer(app)
         server.listen(9000)
-        server.start(num_processes=4)
+        # server.start(num_processes=4)
+        server.start()
         # server.add_sockets(sockets)
         ioloop.IOLoop.instance().start()
 
